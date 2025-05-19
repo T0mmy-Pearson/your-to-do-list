@@ -4,7 +4,7 @@ export default function ToDoCard(props) {
   const { children, handleDeleteTodos, index, handleEditTodos } = props;
   return (
     <li className="todoItem">
-      {children}
+     <i class="fa-regular fa-hand-point-right"></i> {children}
       <div className="actionsContainer">
         <button onClick={() => {
           handleEditTodos(index)

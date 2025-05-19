@@ -42,7 +42,7 @@ useEffect(() => {
 
   localTodos = JSON.parse(localTodos).todos
   setTodos(localTodos)
-}, [todos]);
+}, []);
 
   return (
     <>
