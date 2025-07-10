@@ -1,55 +1,66 @@
-import ToDoInput from "./components/ToDoInput";
-import ToDoList from "./components/ToDoList";
+import JobApplicationInput from "./components/JobApplicationInput";
+import JobApplicationList from "./components/JobApplicationList";
 import { useState, useEffect } from "react";
 
 function App() {
-
-  const [todos, setTodos] = useState(["Your first task..."]);
-  const [ todoValue, setTodoValue ] = useState("");
+  const [applications, setApplications] = useState([]);
+  const [applicationData, setApplicationData] = useState({
+    company: "",
+    position: "",
+    status: "applying"
+  });
 
   function persistData(newList) {
-    localStorage.setItem("todos", JSON.stringify({ todos: newList }))
+    localStorage.setItem("jobApplications", JSON.stringify({ applications: newList }));
   }
 
-  function handleAddTodos(newTodo) {
-    const newTodosList = [...todos, newTodo];
-    persistData(newTodosList);
-    setTodos(newTodosList);
+  function handleAddApplication(newApplication) {
+    const newApplicationsList = [...applications, newApplication];
+    persistData(newApplicationsList);
+    setApplications(newApplicationsList);
   }
 
-  function handleDeleteTodos(index) {
-    const newTodosList = todos.filter((todo, toDoIndex) => {
-      return toDoIndex !== index
-    });
-    persistData(newTodosList);
-    setTodos(newTodosList);
+  function handleUpdateApplication(id, updatedApplication) {
+    const newApplicationsList = applications.map(app => 
+      app.id === id ? updatedApplication : app
+    );
+    persistData(newApplicationsList);
+    setApplications(newApplicationsList);
   }
 
-  function handleEditTodos(index) {
-    const valueToEdit = todos[index]
-    setTodoValue(valueToEdit)
-    handleDeleteTodos(index);
+  function handleDeleteApplication(id) {
+    const newApplicationsList = applications.filter(app => app.id !== id);
+    persistData(newApplicationsList);
+    setApplications(newApplicationsList);
   }
 
-useEffect(() => {
-  if(!localStorage){
-    return
-  }
-  let localTodos = localStorage.getItem("todos");
-  if(!localTodos){
-    return
-  }
+  useEffect(() => {
+    if (!localStorage) {
+      return;
+    }
+    let localApplications = localStorage.getItem("jobApplications");
+    if (!localApplications) {
+      return;
+    }
 
-  localTodos = JSON.parse(localTodos).todos
-  setTodos(localTodos)
-}, []);
+    localApplications = JSON.parse(localApplications).applications;
+    setApplications(localApplications);
+  }, []);
 
   return (
     <>
-     <ToDoInput todoValue={todoValue} setTodoValue={setTodoValue } handleAddTodos={handleAddTodos} />
-     <ToDoList handleEditTodos={handleEditTodos} handleDeleteTodos={handleDeleteTodos} todos={todos}/> 
+      <JobApplicationInput 
+        applicationData={applicationData} 
+        setApplicationData={setApplicationData} 
+        handleAddApplication={handleAddApplication} 
+      />
+      <JobApplicationList 
+        applications={applications}
+        handleUpdateApplication={handleUpdateApplication}
+        handleDeleteApplication={handleDeleteApplication}
+      /> 
     </>
-  )
+  );
 }
 
-export default App
+export default App;
